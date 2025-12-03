@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2 class="mb-3">Audit Logs</h2>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Student</th></tr></thead>
+      <tbody>
+        {% for log in logs %}
+          <tr>
+            <td>{{ log.timestamp }}</td>
+            <td>{{ log.user.username }}</td>
+            <td>{{ log.action }}</td>
+            <td>{% if log.student %}{{ log.student.name }}{% else %}-{% endif %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}
