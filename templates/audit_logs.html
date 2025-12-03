@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row mb-3">
+    <div class="col-12 d-flex align-items-center justify-content-between">
+        <h3 class="border-start border-warning ps-3">Audit Logs</h3>
+        <form class="d-flex" method="GET">
+            <select name="user" class="form-select me-2">
+                <option value="">User</option>
+                {% for u in users %}
+                    <option value="{{ u }}" {% if request.args.get('user') == u %}selected{% endif %}>{{ u }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="action" class="form-control me-2" placeholder="Action" value="{{ request.args.get('action','') }}">
+            <input type="text" name="start" class="form-control me-2" placeholder="Start (YYYY-MM-DD)">
+            <input type="text" name="end" class="form-control me-2" placeholder="End (YYYY-MM-DD)">
+            <button class="btn btn-primary" type="submit">Filter</button>
+        </form>
+    </div>
+</div>
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Student</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                    <tr>
+                        <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        <td>{{ log.user.username }}</td>
+                        <td>{{ log.action }}</td>
+                        <td>{% if log.student %}<a href="{{ url_for('student_detail', student_id=log.student.id) }}">{{ log.student.wsu_id }}</a>{% endif %}</td>
+                        <td>{{ log.details }}</td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5" class="text-center">No logs yet</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

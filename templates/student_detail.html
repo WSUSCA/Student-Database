@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row mb-3">
+    <div class="col-12">
+        <h3 class="border-start border-warning ps-3">{{ student.first_name }} {{ student.last_name }} ({{ student.wsu_id }})</h3>
+    </div>
+</div>
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Student Info</span>
+                <span class="{{ student.current_phase|phase_badge }}">{{ student.current_phase }}</span>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ student_form.hidden_tag() }}
+                    {{ student_form.wsu_id.label(class_='form-label') }}
+                    {{ student_form.wsu_id(class_='form-control mb-2') }}
+                    {{ student_form.first_name.label(class_='form-label') }}
+                    {{ student_form.first_name(class_='form-control mb-2') }}
+                    {{ student_form.last_name.label(class_='form-label') }}
+                    {{ student_form.last_name(class_='form-control mb-2') }}
+                    {{ student_form.email.label(class_='form-label') }}
+                    {{ student_form.email(class_='form-control mb-2') }}
+                    {{ student_form.major.label(class_='form-label') }}
+                    {{ student_form.major(class_='form-control mb-2') }}
+                    {{ student_form.college.label(class_='form-label') }}
+                    {{ student_form.college(class_='form-control mb-2') }}
+                    {{ student_form.class_standing.label(class_='form-label') }}
+                    {{ student_form.class_standing(class_='form-control mb-2') }}
+                    <div class="form-check mb-2">
+                        {{ student_form.first_gen(class_='form-check-input', id='first_gen') }}
+                        <label class="form-check-label" for="first_gen">First Gen</label>
+                    </div>
+                    <div class="form-check mb-2">
+                        {{ student_form.is_alumni(class_='form-check-input', id='is_alumni') }}
+                        <label class="form-check-label" for="is_alumni">Alumni</label>
+                    </div>
+                    {{ student_form.graduation_term.label(class_='form-label') }}
+                    {{ student_form.graduation_term(class_='form-control mb-3') }}
+                    <button type="submit" name="save_student" class="btn btn-primary w-100">Save</button>
+                </form>
+            </div>
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-header">Update Phase</div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ phase_form.hidden_tag() }}
+                    {{ phase_form.current_phase.label(class_='form-label') }}
+                    {{ phase_form.current_phase(class_='form-select mb-2') }}
+                    <button class="btn btn-dark w-100" name="update_phase" type="submit">Update Phase</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header">Journey History</div>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Phase</th>
+                            <th>Source</th>
+                            <th>Date</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for j in student.journey_history %}
+                            <tr>
+                                <td>{{ j.phase }}</td>
+                                <td>{{ j.source }}</td>
+                                <td>{{ j.date_recorded.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ j.notes }}</td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="4" class="text-center">No history yet</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Goals</span>
+                <button class="btn btn-sm btn-outline-dark" data-bs-toggle="collapse" data-bs-target="#goalForm">Add</button>
+            </div>
+            <div class="collapse" id="goalForm">
+                <div class="card-body">
+                    <form method="POST">
+                        {{ goal_form.hidden_tag() }}
+                        {{ goal_form.goal_type.label(class_='form-label') }}
+                        {{ goal_form.goal_type(class_='form-control mb-2') }}
+                        {{ goal_form.description.label(class_='form-label') }}
+                        {{ goal_form.description(class_='form-control mb-2') }}
+                        {{ goal_form.target_date.label(class_='form-label') }}
+                        {{ goal_form.target_date(class_='form-control mb-2') }}
+                        {{ goal_form.status.label(class_='form-label') }}
+                        {{ goal_form.status(class_='form-select mb-3') }}
+                        <button class="btn btn-primary" type="submit" name="add_goal">Add Goal</button>
+                    </form>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Type</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Target Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for g in student.goals %}
+                            <tr>
+                                <td>{{ g.goal_type }}</td>
+                                <td>{{ g.description }}</td>
+                                <td>{{ g.status }}</td>
+                                <td>{{ g.target_date }}</td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="4" class="text-center">No goals yet</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Notes (encrypted)</span>
+                <button class="btn btn-sm btn-outline-dark" data-bs-toggle="collapse" data-bs-target="#noteForm">Add</button>
+            </div>
+            <div class="collapse" id="noteForm">
+                <div class="card-body">
+                    <form method="POST">
+                        {{ note_form.hidden_tag() }}
+                        {{ note_form.author.label(class_='form-label') }}
+                        {{ note_form.author(class_='form-control mb-2') }}
+                        {{ note_form.note_type.label(class_='form-label') }}
+                        {{ note_form.note_type(class_='form-control mb-2') }}
+                        {{ note_form.content.label(class_='form-label') }}
+                        {{ note_form.content(class_='form-control mb-3') }}
+                        <button class="btn btn-primary" type="submit" name="add_note">Add Note</button>
+                    </form>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Author</th>
+                            <th>Type</th>
+                            <th>Date</th>
+                            <th>Content</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for n in student.notes %}
+                            <tr>
+                                <td>{{ n.author }}</td>
+                                <td>{{ n.note_type }}</td>
+                                <td>{{ n.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ n.get_content() }}</td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="4" class="text-center">No notes yet</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Visits</span>
+                <button class="btn btn-sm btn-outline-dark" data-bs-toggle="collapse" data-bs-target="#visitForm">Add</button>
+            </div>
+            <div class="collapse" id="visitForm">
+                <div class="card-body">
+                    <form method="POST">
+                        {{ visit_form.hidden_tag() }}
+                        {{ visit_form.date.label(class_='form-label') }}
+                        {{ visit_form.date(class_='form-control mb-2') }}
+                        {{ visit_form.visit_type.label(class_='form-label') }}
+                        {{ visit_form.visit_type(class_='form-control mb-2') }}
+                        {{ visit_form.topic.label(class_='form-label') }}
+                        {{ visit_form.topic(class_='form-control mb-2') }}
+                        {{ visit_form.staff.label(class_='form-label') }}
+                        {{ visit_form.staff(class_='form-control mb-2') }}
+                        <div class="form-check mb-2">
+                            {{ visit_form.follow_up_needed(class_='form-check-input', id='follow_up_needed') }}
+                            <label class="form-check-label" for="follow_up_needed">Follow-up needed</label>
+                        </div>
+                        {{ visit_form.follow_up_due.label(class_='form-label') }}
+                        {{ visit_form.follow_up_due(class_='form-control mb-3') }}
+                        <button class="btn btn-primary" type="submit" name="add_visit">Log Visit</button>
+                    </form>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Topic</th>
+                            <th>Staff</th>
+                            <th>Follow-up</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for v in student.visits %}
+                            <tr>
+                                <td>{{ v.date.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ v.visit_type }}</td>
+                                <td>{{ v.topic }}</td>
+                                <td>{{ v.staff }}</td>
+                                <td>{% if v.follow_up_needed %}Yes by {{ v.follow_up_due }}{% else %}No{% endif %}</td>
+                            </tr>
+                        {% else %}
+                            <tr><td colspan="5" class="text-center">No visits yet</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

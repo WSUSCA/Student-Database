@@ -1,0 +1,57 @@
+body {
+    background-color: #f7f7f7;
+}
+
+.brand-navbar {
+    background: linear-gradient(135deg, #000000 0%, #27251F 35%, #FFDB00 100%);
+}
+
+.btn-primary {
+    background-color: #27251F;
+    border-color: #27251F;
+}
+
+.btn-primary:hover {
+    background-color: #000000;
+    border-color: #FFDB00;
+    color: #FFDB00;
+}
+
+.btn-secondary {
+    background-color: #ffffff;
+    color: #27251F;
+    border-color: #27251F;
+}
+
+.logo-placeholder {
+    width: 50px;
+    height: 50px;
+    background-color: #fff;
+    border-radius: 6px;
+    object-fit: contain;
+    padding: 6px;
+}
+
+.card {
+    border: none;
+}
+
+.card-header {
+    background-color: #fff;
+    font-weight: 600;
+}
+
+.phase-experience {
+    background-color: #FFDB00;
+    color: #000;
+}
+
+.phase-act {
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #000;
+}
+
+.table thead th {
+    border-top: none;
+}
